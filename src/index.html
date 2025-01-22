@@ -14,9 +14,12 @@
 </head>
 
 <body style="background-color: black;">
-    <video id="webcam" width="640" height="480" autoplay></video>
-    <!-- <input type="file" id="imageInput" accept="image/*"> -->
-    <canvas id="output" width="640" height="480"></canvas>
+    <div style="display: flex;">
+        <video id="webcam" width="640" height="480" autoplay></video>
+        <!-- <input type="file" id="imageInput" accept="image/*"> -->
+        <canvas id="output" width="640" height="480" style="border: 1px solid white;"></canvas>
+    </div>
+
     <button id="start">Start Recording</button>
 
     <script src="./index.js" type="module"></script>

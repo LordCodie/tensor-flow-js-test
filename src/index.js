@@ -5,7 +5,7 @@ const video = document.getElementById('webcam')
 const canvas = document.getElementById('output')
 const startBtn = document.getElementById('start')
 const ctx = canvas.getContext('2d')
-const imgElement = new Image()
+// const imgElement = new Image()
 
 tf.env().set('WEBGL_VERSION', 1);
 await tf.setBackend('wasm');
@@ -17,7 +17,8 @@ const model = handPoseDetection.SupportedModels.MediaPipeHands
 const detectorConfig = {
     runtime: 'tfjs', // or 'tfjs',
     solutionPath: 'https://cdn.jsdelivr.net/npm/@mediapipe/hands',
-    modelType: 'lite'
+    modelType: 'lite',
+    maxHands: 1
 }
 const detector = await handPoseDetection.createDetector(model, detectorConfig)
 
@@ -53,22 +54,26 @@ function startWebCam() {
 startWebCam()
 
 startBtn.addEventListener('click', async () => {
+    console.log('snap.....')
+
     canvas.width = video.width;
     canvas.height = video.height;
     ctx.drawImage(video, 0, 0, canvas.width, canvas.height)
-
-    console.log('snap.....')
     await detectHandPose()
 })
 
-
 async function detectHandPose() {
-    const estimationConfig = {staticImageMode: true}
+    const estimationConfig = { staticImageMode: true, flipHorizontal: false }
     const hands = await detector.estimateHands(video, estimationConfig)
-    console.log("hands:", hands)
+    const handsScore = hands[0]?.score
 
-    // const poseDB = handCalc()
+    const poseDB = handCalc()
+
+    // console.log("input hands:", hands)
+    // console.log("hands score:", handsScore)
+    // console.log("poseDB:", poseDB)
     // console.log("filter pose:", poseDB.filter(item => item.score === hands[0].score))
+
 
     if (hands.length > 0) {
         for (const hand of hands) {
